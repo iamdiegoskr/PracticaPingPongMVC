@@ -34,6 +34,7 @@
         this.width = width;
         this.height = height;
         this.board = board;
+        this.speed = 10;
 
         //Asigno la barra al tablero.
         this.board.bars.push(this);
@@ -45,10 +46,13 @@
     self.Bar.prototype = {
 
         down: function(){
-
+            this.y += this.speed;
         },
         up: function(){
-
+            this.y -= this.speed;
+        },
+        toStrign: function(){
+            return `x = ${this.x}, y=${this.y}`;
         }
 
     }
@@ -93,25 +97,39 @@
 })();
 
 
+
+//Tablero
+let board = new Board(800,400);
+console.log(board);
+
+   //Barra
+const bar = new Bar(0,100,40,100,board);
+const bar2 = new Bar(760, 100, 40, 100, board);
+
+//Vista del tablero
+let boardView = new BoardView(canvas,board);
+
+document.addEventListener('keydown',(event)=>{
+    if((event.key)=="ArrowDown"){
+        console.log("Pa abajo mijo");
+        bar.down();
+    }else if((event.key)=="ArrowUp"){
+        console.log("Pa arriba mijo");
+        bar.up();
+    }
+
+    console.log(bar.toStrign());
+})
+
 window.addEventListener('load', main);
 
 //Especie de controlador
 function main(){
 
-
     //Canvas donde se va a dibujar.
     let canvas = document.getElementById("canvas")
 
-    //Tablero
-    let board = new Board(800,400);
-    console.log(board);
 
-    //Barra
-    const bar = new Bar(10,100,40,100,board);
-    const bar2 = new Bar(750, 100, 40, 100, board);
-
-    //Vista del tablero
-    let boardView = new BoardView(canvas,board);
     boardView.draw()
 
 }
