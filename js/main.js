@@ -25,6 +25,37 @@
 })();
 
 
+//Crear clase barras
+(function(){
+
+    self.Bar = function(x,y,width,height,board){
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.board = board;
+
+        //Asigno la barra al tablero.
+        this.board.bars.push(this);
+
+        //Que voy a dibujar.
+        this.kind = "rectangle";
+    }
+
+    self.Bar.prototype = {
+
+        down: function(){
+
+        },
+        up: function(){
+
+        }
+
+    }
+
+
+})();
+
 (function(){
 
     //Clase para dibujar el tablero
@@ -36,11 +67,35 @@
         this.ctx = canvas.getContext("2d");
     }
 
+    self.BoardView.prototype = {
+
+        draw: function(){
+            for (let i =  board.elements.length -1 ; i >= 0; i--) {
+                let ele = board.elements[i];
+
+                draw(this.ctx, ele);
+
+            }
+        }
+
+    }
+
+    function draw(ctx, element){
+
+        switch(element.kind){
+            case "square":
+                ctx.fillRect(element.x, element.y, element.width, element.height);
+                break;
+        }
+
+    }
+
 })();
 
 
 window.addEventListener('load', main);
 
+//Especie de controlador
 function main(){
 
     let canvas = document.getElementById("canvas")
