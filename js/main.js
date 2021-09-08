@@ -16,7 +16,7 @@
 
         get elements(){
             let elements = this.bars;
-            elements.push(this.ball)
+            //elements.push(this.ball)
             return elements;
         }
 
@@ -34,7 +34,7 @@
         this.width = width;
         this.height = height;
         this.board = board;
-        this.speed = 10;
+        this.speed = 20;
 
         //Asigno la barra al tablero.
         this.board.bars.push(this);
@@ -73,63 +73,61 @@
 
     self.BoardView.prototype = {
 
+        clean: function(){
+            this.ctx.clearRect(0,0,this.board.width,this.board.height);
+        },
         draw: function(){
             for (let i =  this.board.elements.length -1 ; i >= 0; i--) {
                 let ele = this.board.elements[i];
                 draw(this.ctx, ele);
 
             }
+        },
+        play: function(){
+            this.clean();
+            this.draw();
         }
-
     }
 
     function draw(ctx, element){
-        console.log(element);
-        if(element!=null && element.hasOwnProperty("kind")){
+
             switch(element.kind){
                 case "rectangle":
                     ctx.fillRect(element.x, element.y, element.width, element.height);
                     break;
             }
-        }
+
     }
 
 })();
 
 
+let canvas = document.getElementById("canvas")//Canvas para dibujar
+let board = new Board(800,400);//Tablero
+const barLeft = new Bar(10,100,40,100,board);//Barra
+const barRight  = new Bar(750, 100, 40, 100, board);//Barra2
+let boardView = new BoardView(canvas,board);//Vista del tablero
 
-//Tablero
-let board = new Board(800,400);
-console.log(board);
-
-   //Barra
-const bar = new Bar(0,100,40,100,board);
-const bar2 = new Bar(760, 100, 40, 100, board);
-
-//Vista del tablero
-let boardView = new BoardView(canvas,board);
+window.requestAnimationFrame(controller)
 
 document.addEventListener('keydown',(event)=>{
-    if((event.key)=="ArrowDown"){
-        console.log("Pa abajo mijo");
-        bar.down();
-    }else if((event.key)=="ArrowUp"){
-        console.log("Pa arriba mijo");
-        bar.up();
-    }
 
-    console.log(bar.toStrign());
+    event.preventDefault();
+
+    if((event.key)=="ArrowDown"){
+        barRight.down();
+    }else if((event.key)=="ArrowUp"){
+        barRight.up();
+    }else if((event.key)=="w"){
+        barLeft.up();
+    }else if((event.key)=="s"){
+        barLeft.down();
+    }
 })
 
-window.addEventListener('load', main);
 
 //Especie de controlador
-function main(){
-
-    //Canvas donde se va a dibujar.
-    let canvas = document.getElementById("canvas")
-
-
-    boardView.draw()
-
+function controller(){
+    boardView.play();
+    window.requestAnimationFrame(controller);
 }
